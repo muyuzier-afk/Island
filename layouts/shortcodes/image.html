@@ -1,0 +1,53 @@
+{{/* 
+  Image Shortcode - Optimized images with lazy loading
+  Mimics Astro's Image component with responsive srcset and blur-up
+*/}}
+
+{{ $src := .Get "src" }}
+{{ $alt := .Get "alt" | default "" }}
+{{ $width := .Get "width" | default "800" }}
+{{ $height := .Get "height" | default "600" }}
+{{ $loading := .Get "loading" | default "lazy" }}
+{{ $quality := .Get "quality" | default "80" }}
+{{ $class := .Get "class" | default "" }}
+{{ $caption := .Get "caption" }}
+
+{{/* Check if it's a page resource or static asset */}}
+{{ $image := "" }}
+{{ if $.Page.Resources.GetMatch $src }}
+  {{ $image = $.Page.Resources.GetMatch $src }}
+{{ else if fileExists (path.Join "static" $src) }}
+  {{ $image = imageConfig (path.Join "static" $src) }}
+{{ end }}
+
+<figure class="island-image {{ $class }}" style="margin: 2rem 0;">
+  <div 
+    data-island="image-optimizer"
+    data-trigger="visible"
+    data-src="{{ $src | absURL }}"
+    data-alt="{{ $alt }}"
+    data-width="{{ $width }}"
+    data-height="{{ $height }}"
+    style="position: relative; width: 100%; max-width: {{ $width }}px; aspect-ratio: {{ $width }}/{{ $height }}; overflow: hidden; border-radius: 8px; background: #f0f0f0;"
+  >
+    <!-- Low-quality placeholder shown initially -->
+    <img 
+      src="{{ $src | absURL }}?q=20&w={{ div (int $width) 4 }}"
+      alt="{{ $alt }}"
+      loading="{{ $loading }}"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(20px); transition: opacity 0.3s;"
+    />
+    <!-- High-quality image loaded lazily by island -->
+  </div>
+  
+  {{ with $caption }}
+  <figcaption style="text-align: center; margin-top: 0.75rem; color: #666; font-size: 0.875rem;">
+    {{ . | markdownify }}
+  </figcaption>
+  {{ end }}
+</figure>
+
+{{/* Inject island runtime if not already present */}}
+{{ if not (.Page.Scratch.Get "hasImageIsland") }}
+  {{ .Page.Scratch.Set "hasImageIsland" true }}
+{{ end }}

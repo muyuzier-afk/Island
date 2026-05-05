@@ -1,0 +1,46 @@
+{{/*
+  Tabs Shortcode - Interactive tabbed content
+  Mimics Astro's UI components with Zero JS by default
+  SECURITY: Removed inline event handlers for CSP compliance
+*/}}
+
+{{ $groupId := .Get "groupId" | default (printf "tabs-%d" .Ordinal) }}
+{{ $defaultTab := .Get "default" | default "0" }}
+
+<div class="island-tabs" style="margin: 2rem 0;">
+  <div
+    data-island="tabs"
+    data-trigger="interaction"
+    data-group="{{ $groupId }}"
+    data-default="{{ $defaultTab }}"
+    style="border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;"
+  >
+    <!-- Tab headers -->
+    <div role="tablist" style="display: flex; border-bottom: 1px solid #e0e0e0; background: #f9f9f9;">
+      {{ range $i, $tab := $.Scratch.Get "tabs" }}
+      <button
+        role="tab"
+        data-tab-index="{{ $i }}"
+        class="tab-button"
+        style="flex: 1; padding: 12px 16px; border: none; background: transparent; cursor: pointer; font-size: 14px; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s;"
+      >
+        {{ index $tab "label" }}
+      </button>
+      {{ end }}
+    </div>
+
+    <!-- Tab panels -->
+    <div style="padding: 16px;">
+      {{ range $i, $tab := $.Scratch.Get "tabs" }}
+      <div
+        role="tabpanel"
+        data-panel-index="{{ $i }}"
+        style="display: {{ if eq (string $i) $defaultTab }}block{{ else }}none{{ end }};"
+        aria-hidden="{{ if eq (string $i) $defaultTab }}false{{ else }}true{{ end }}"
+      >
+        {{ index $tab "content" | markdownify }}
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>

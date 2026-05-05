@@ -1,0 +1,70 @@
+```
+# Build/output directories
+public/
+resources/_gen/
+ hugo_stats.json
+
+# Environment specific files
+.env
+.env.local
+*.env.*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dependencies (if any)
+node_modules/
+vendor/
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Python specific (if Python files detected)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.tox/
+
+# Go specific (if Go files detected)
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.prof
+go.mod
+go.sum
+
+# Node.js specific (if JS/TS files detected)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
+.nyc_output/
+coverage/
+.nuxt/
+.next/
+```

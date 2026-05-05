@@ -1,0 +1,64 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'Island'
+theme = "PaperMod"
+
+[params]
+  defaultTheme = "auto"
+  disableThemeToggle = false
+  ShowShareButtons = true
+  ShowReadingTime = true
+  disableSpecial1stPost = false
+  displayFullLangName = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowAllPagesInArchive = true
+  ShowPageNums = true
+  images = ["images/avatar.png"]
+  profileMode = { enabled = false, title = "Island", subtitle = "A high-performance blog with Zero JS and Island Architecture", imageUrl = "images/avatar.png", imageTitle = "Island Logo" }
+  socialIcons = []
+  assets = { disableHLJS = false, disableFingerprinting = false }
+  cover = { hidden = false, hiddenInList = false, hiddenInSingle = false }
+  label = { text = "Island", iconSVG = "" }
+  homeInfoParams = { Title = "Welcome to Island 🏝️", Content = "A Hugo-based blog with PaperMod theme, featuring **Zero JavaScript by default** and **Island Architecture** for maximum performance. Inspired by Astro, but even faster." }
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 20
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 30
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[minify]
+  minifyOutput = true
+  tdewolff = { enable = true }
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+    codeFences = true
+    guessSyntax = true
+    style = "monokai"
+
+[privacy]
+  [privacy.twitter]
+    enableDNT = true
+  [privacy.youtube]
+    privacyEnhanced = true

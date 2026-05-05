@@ -1,0 +1,30 @@
+{{- /* MiSans Variable Font */ -}}
+{{- $fontDir := "fonts" -}}
+{{- $fontFile := printf "%s/MiSans-VF.woff2" $fontDir -}}
+{{- with resources.Get $fontFile -}}
+<style>
+@font-face {
+  font-family: 'MiSans';
+  src: url('{{ $fontFile | relURL }}') format('woff2-variations');
+  font-weight: 100 900;
+  font-stretch: 1%;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family-base: 'MiSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-code: 'MiSans', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+}
+
+body, .post-content, .entry-content, h1, h2, h3, h4, h5, h6, p, a, span, div, li, td, th {
+  font-family: var(--font-family-base) !important;
+}
+
+code, pre, kbd, samp, var {
+  font-family: var(--font-family-code) !important;
+}
+</style>
+{{- else -}}
+{{- warnf "MiSans font file not found at static/%s" $fontFile -}}
+{{- end -}}

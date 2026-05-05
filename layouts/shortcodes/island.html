@@ -1,0 +1,19 @@
+{{/* 
+  Island Shortcode - Embed interactive islands with Zero JS by default
+  
+  Usage: {{< island name="counter" trigger="idle" >}}
+  
+  Triggers:
+  - idle: Load when browser is idle (default)
+  - visible: Load when element is visible
+  - interaction: Load on first user interaction
+  - immediate: Load immediately
+*/}}
+
+{{ $name := .Get "name" }}
+{{ $trigger := .Get "trigger" | default "idle" }}
+{{ $attrs := .Get "attrs" }}
+
+<div data-island="{{ $name }}" data-trigger="{{ $trigger }}" {{ with $attrs }}{{ . | safeHTMLAttr }}{{ end }}>
+  {{ .Inner | default (printf "<!-- Island: %s -->" $name) | safeHTML }}
+</div>

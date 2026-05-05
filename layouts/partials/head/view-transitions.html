@@ -1,0 +1,86 @@
+{{/* 
+  View Transitions CSS - Smooth page transitions
+  Mimics Astro's ViewTransitions API with CSS
+*/}}
+
+{{- if .Site.Params.enableViewTransitions }}
+<style>
+/* Enable view transitions */
+@view-transition {
+  navigation: auto;
+}
+
+/* Default transition animations */
+::view-transition-old(root) {
+  animation: fade-out 0.3s ease-out;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 0.5s ease-in;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Slide transition for specific pages */
+.view-transition-slide ::view-transition-old(root) {
+  animation: slide-out 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.view-transition-slide ::view-transition-new(root) {
+  animation: slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-out {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-100%); opacity: 0; }
+}
+
+/* Image shared element transition */
+::view-transition-image-pair(post-cover) {
+  isolation: isolate;
+}
+
+/* Dark mode transition */
+@media (prefers-color-scheme: dark) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    mix-blend-mode: plus-lighter;
+  }
+}
+
+/* Disable for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Page-specific transition names */
+[data-transition="fade"] {
+  view-transition-name: fade-page;
+}
+
+[data-transition="slide"] {
+  view-transition-name: slide-page;
+}
+
+[data-transition="zoom"] {
+  view-transition-name: zoom-page;
+}
+</style>
+{{- end }}

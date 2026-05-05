@@ -1,0 +1,72 @@
+{{/* 
+  SEO & Social Meta Tags - Comprehensive SEO support
+  Mimics Astro's SEO component with Open Graph, Twitter Cards, JSON-LD
+*/}}
+
+{{ $title := or .Title .Site.Title }}
+{{ $description := or .Description .Site.Params.description }}
+{{ $image := or .Params.image .Site.Params.images._default }}
+{{ $url := .Permalink }}
+{{ $type := or .Params.type "article" }}
+{{ $published := .Date }}
+{{ $modified := .Lastmod }}
+{{ $author := or .Params.author .Site.Params.author.name }}
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="{{ $title }}">
+<meta name="description" content="{{ $description }}">
+<meta name="author" content="{{ $author }}">
+{{ with $published }}<meta name="date" content="{{ .Format "2006-01-02" }}">{{ end }}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ $type }}">
+<meta property="og:url" content="{{ $url }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+{{ with $image }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+{{ with .Site.Params.social.twitter }}<meta property="og:site_name" content="{{ . }}">{{ end }}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ $url }}">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $description }}">
+{{ with $image }}<meta name="twitter:image" content="{{ . | absURL }}">{{ end }}
+{{ with .Site.Params.social.twitter }}<meta name="twitter:creator" content="@{{ . }}">{{ end }}
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ $type }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ $url }}"
+  },
+  "headline": {{ $title }},
+  "description": {{ $description }},
+  {{ with $image }}"image": {{ . | absURL }},{{ end }}
+  {{ with $author }}"author": {
+    "@type": "Person",
+    "name": {{ $author }}
+  },{{ end }}
+  {{ with .Site.Params.publisher }}"publisher": {
+    "@type": "{{ .type | default "Organization" }}",
+    "name": {{ .name }},
+    {{ with .logo }}"logo": {
+      "@type": "ImageObject",
+      "url": {{ . | absURL }}
+    }{{ end }}
+  },{{ end }}
+  {{ with $published }}"datePublished": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+  {{ with $modified }}"dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}"{{ end }}
+}
+</script>
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ $url }}">
+
+<!-- RSS Feed -->
+{{ with .OutputFormats.Get "RSS" }}
+<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{ end }}
