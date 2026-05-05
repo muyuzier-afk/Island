@@ -1,0 +1,27 @@
+{{ define "main" }}
+<!-- Island Architecture: Zero JS by default -->
+<!-- Only load JS for interactive islands when explicitly enabled -->
+<article class="post-content">
+  {{ .Content }}
+</article>
+
+{{/* 
+  Island Architecture Implementation:
+  - No JavaScript is loaded by default
+  - Interactive components are loaded only when needed
+  - Uses data-island attributes to mark interactive regions
+*/}}
+
+{{ $hasIslands := false }}
+{{ range (split .Content "<!-- island:") }}
+  {{ if and (gt (len .) 0) (not (hasPrefix . "-->")) }}
+    {{ $hasIslands = true }}
+  {{ end }}
+{{ end }}
+
+{{ if $hasIslands }}
+<!-- Islands detected - minimal runtime will be injected -->
+{{ partial "islands/runtime.html" . }}
+{{ end }}
+
+{{ end }}

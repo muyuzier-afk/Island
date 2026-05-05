@@ -1,0 +1,45 @@
+{{/* 
+  Component Shortcode - Framework-agnostic component embedding
+  Mimics Astro's framework-agnostic components (React, Vue, Svelte, etc.)
+  
+  Usage:
+  {{< component name="MyComponent" framework="react" props='{"count": 5}' />}}
+*/}}
+
+{{ $name := .Get "name" }}
+{{ $framework := .Get "framework" | default "vanilla" }}
+{{ $props := .Get "props" | default "{}" }}
+{{ $client := .Get "client" | default "idle" }}
+{{ $slot := .Inner }}
+
+{{ $triggerMap := dict 
+  "load" "immediate"
+  "idle" "idle" 
+  "visible" "visible"
+  "interaction" "interaction"
+  "only" "immediate"
+}}
+
+{{ $trigger := index $triggerMap $client | default "idle" }}
+
+<div 
+  data-island="component-{{ $framework }}"
+  data-trigger="{{ $trigger }}"
+  data-component="{{ $name }}"
+  data-framework="{{ $framework }}"
+  data-props="{{ $props }}"
+  style="margin: 1.5rem 0;"
+>
+  <!-- Server-rendered fallback content -->
+  <div class="component-fallback" style="padding: 24px; text-align: center; background: #f9f9f9; border-radius: 8px; border: 1px dashed #ccc;">
+    {{ if $slot }}
+      {{ $slot | markdownify }}
+    {{ else }}
+      <p style="color: #666;">Loading {{ $name }} component...</p>
+      <p style="font-size: 12px; color: #999; margin-top: 8px;">Framework: {{ $framework }} | Client: {{ $client }}</p>
+    {{ end }}
+  </div>
+</div>
+
+{{/* Register component for runtime loading */}}
+{{ $.Page.Scratch.Add "components" (slice (dict "name" $name "framework" $framework "client" $client)) }}

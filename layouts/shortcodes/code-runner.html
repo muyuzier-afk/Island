@@ -1,0 +1,42 @@
+{{/* 
+  Code Runner Shortcode - Interactive code execution
+  Mimics Astro's playground/demo components
+*/}}
+
+{{ $language := .Get "lang" | default "javascript" }}
+{{ $title := .Get "title" | default "Code Example" }}
+{{ $runnable := .Get "runnable" | default "true" }}
+
+<div class="island-code-runner" style="margin: 2rem 0;">
+  <div 
+    data-island="code-runner"
+    data-trigger="visible"
+    data-language="{{ $language }}"
+    data-runnable="{{ $runnable }}"
+    style="border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;"
+  >
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: #f5f5f5; border-bottom: 1px solid #e0e0e0;">
+      <span style="font-size: 14px; font-weight: 600; color: #333;">{{ $title }}</span>
+      {{ if eq $runnable "true" }}
+      <button 
+        class="run-button"
+        style="padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;"
+      >
+        ▶ Run
+      </button>
+      {{ end }}
+    </div>
+    
+    <!-- Code editor area (read-only display) -->
+    <div class="code-editor" style="background: #1e1e1e; padding: 16px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.5;">
+      <pre><code class="language-{{ $language }}">{{ .Inner | htmlEscape }}</code></pre>
+    </div>
+    
+    <!-- Output area -->
+    <div class="code-output" style="display: none; border-top: 1px solid #e0e0e0; background: #fafafa; padding: 16px; min-height: 50px;">
+      <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Output:</div>
+      <pre class="output-content" style="margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'Fira Code', monospace; font-size: 13px;"></pre>
+    </div>
+  </div>
+</div>

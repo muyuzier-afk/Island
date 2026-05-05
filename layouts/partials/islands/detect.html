@@ -1,0 +1,38 @@
+{{/* 
+  Island Detection - Check if page has islands and inject runtime
+  More accurate detection using data attributes
+*/}}
+
+{{ $hasIslands := false }}
+{{ $islandNames := slice }}
+
+{{/* Check content for island shortcodes */}}
+{{ if .Content }}
+  {{ $contentStr := string .Content }}
+  {{ if strings.Contains $contentStr "data-island" }}
+    {{ $hasIslands = true }}
+    
+    {{/* Extract island names for optimized loading */}}
+    {{ $matches := findRE `data-island="([^"]+)"` $contentStr }}
+    {{ range $matches }}
+      {{ $name := replace (replace . `data-island="` "") `"` "" }}
+      {{ if not (in $islandNames $name) }}
+        {{ $islandNames = $islandNames | append $name }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Also check raw content before markdown rendering */}}
+{{ if .RawContent }}
+  {{ if strings.Contains .RawContent "island name=" }}
+    {{ $hasIslands = true }}
+  {{ end }}
+{{ end }}
+
+{{- if $hasIslands }}
+<!-- Island Runtime: {{ len $islandNames }} island(s) detected -->
+{{ partial "islands/runtime.html" (dict "Page" . "Islands" $islandNames) }}
+{{- else }}
+<!-- Zero JS: No islands detected, pure static HTML -->
+{{- end }}
